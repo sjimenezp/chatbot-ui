@@ -1,15 +1,15 @@
-import {IconArrowDown, IconBolt, IconSend, IconUpload, IconWriting} from '@tabler/icons-react';
-import React, {KeyboardEvent, MutableRefObject, useCallback, useContext, useEffect, useRef, useState,} from 'react';
+import { IconArrowDown, IconBolt, IconSend, IconUpload, IconWriting } from '@tabler/icons-react';
+import React, { KeyboardEvent, MutableRefObject, useCallback, useContext, useEffect, useRef, useState, } from 'react';
 
-import {useTranslation} from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 
-import {Content, Message} from '@/types/chat';
-import {Plugin} from '@/types/plugin';
-import {Prompt} from '@/types/prompt';
+import { Content, Message } from '@/types/chat';
+import { Plugin } from '@/types/plugin';
+import { Prompt } from '@/types/prompt';
 
 import HomeContext from '@/pages/api/home/home.context';
-import {PromptList} from './PromptList';
-import {VariableModal} from './VariableModal';
+import { PromptList } from './PromptList';
+import { VariableModal } from './VariableModal';
 
 interface Props {
     onSend: (message: Message, plugin: Plugin | null) => void;
@@ -23,18 +23,18 @@ interface Props {
 
 
 export const ChatInput = ({
-                              onSend,
-                              onRegenerate,
-                              maxImg,
-                              onScrollDownClick,
-                              stopConversationRef,
-                              textareaRef,
-                              showScrollDownButton,
-                          }: Props) => {
-    const {t} = useTranslation('chat');
+    onSend,
+    onRegenerate,
+    maxImg,
+    onScrollDownClick,
+    stopConversationRef,
+    textareaRef,
+    showScrollDownButton,
+}: Props) => {
+    const { t } = useTranslation('chat');
 
     const {
-        state: {selectedConversation, messageIsStreaming, prompts},
+        state: { selectedConversation, messageIsStreaming, prompts },
 
         dispatch: homeDispatch,
     } = useContext(HomeContext);
@@ -65,7 +65,7 @@ export const ChatInput = ({
             alert(
                 t(
                     `Message limit is {{maxLength}} characters. You have entered {{valueLength}} characters.`,
-                    {maxLength, valueLength: value.length},
+                    { maxLength, valueLength: value.length },
                 ),
             );
             return;
@@ -93,18 +93,18 @@ export const ChatInput = ({
         let finalContent: string | Content[] = content
 
         if (thisList.length > 0) {
-            finalContent = [{type: 'text', text: content}]
+            finalContent = [{ type: 'text', text: content }]
             thisList.forEach((item) => {
                 if (Array.isArray(finalContent)) {
                     finalContent.push({
                         type: "image_url",
-                        image_url: {url: item}
+                        image_url: { url: item }
                     })
                 }
             })
         }
 
-        onSend({role: 'user', content: finalContent}, plugin);
+        onSend({ role: 'user', content: finalContent }, plugin);
         setContent('');
         setImageSrcList([]);
         setPlugin(null);
@@ -239,9 +239,8 @@ export const ChatInput = ({
         if (textareaRef && textareaRef.current) {
             textareaRef.current.style.height = 'inherit';
             textareaRef.current.style.height = `${textareaRef.current?.scrollHeight}px`;
-            textareaRef.current.style.overflow = `${
-                textareaRef?.current?.scrollHeight > 400 ? 'auto' : 'hidden'
-            }`;
+            textareaRef.current.style.overflow = `${textareaRef?.current?.scrollHeight > 400 ? 'auto' : 'hidden'
+                }`;
         }
     }, [content]);
 
@@ -325,7 +324,7 @@ export const ChatInput = ({
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                style={{display: 'none'}}
+                style={{ display: 'none' }}
                 id="upload-button"
             />
             <div className="lg:mx-auto lg:max-w-3xl mx-2 md:mx-4 mt-4 md:mt-[52px] ">
@@ -333,27 +332,27 @@ export const ChatInput = ({
                     <div
                         className="text-black flex items-center p-2 mx-2 sm:mx-4 w-full rounded-t-md bg-white border-black/10 dark:text-white dark:border-gray-900/50 dark:bg-[#40414f] border-t border-x">
                         <button title="upload image file" disabled={maxImg === 0}
-                                className={"p-2 mr-2 bg-[#ececec] dark:bg-[#343541] rounded-lg" + (maxImg === 0 ? " cursor-not-allowed" : "")}
-                                onClick={() => {
-                                    document.getElementById("upload-button")?.click()
-                                }}>
-                            <IconUpload size={20}/>
+                            className={"p-2 mr-2 bg-[#ececec] dark:bg-[#343541] rounded-lg" + (maxImg === 0 ? " cursor-not-allowed" : "")}
+                            onClick={() => {
+                                document.getElementById("upload-button")?.click()
+                            }}>
+                            <IconUpload size={20} />
                         </button>
                         {urlInputShow ? <>
                             <input onChange={(e) => {
                                 setInputUrl(e.target.value)
-                            }} id="imgUrlInputBox" autoFocus style={{height: "2.25rem"}}
-                                   className="px-2 h-full bg-[#ececec] dark:bg-[#343541] rounded-l-lg"/>
+                            }} id="imgUrlInputBox" autoFocus style={{ height: "2.25rem" }}
+                                className="px-2 h-full bg-[#ececec] dark:bg-[#343541] rounded-l-lg" />
                             <button title="upload" className="p-2 bg-[#ececec] dark:bg-[#343541] rounded-r-lg"
-                                    onClick={uploadInput}>
+                                onClick={uploadInput}>
                                 {inputUrl ? "Submit" : "Close"}
                             </button>
                         </> : <button disabled={maxImg === 0} title="Upload images by entering the url"
-                                      className={"p-2 bg-[#ececec] dark:bg-[#343541] rounded-lg" + (maxImg === 0 ? " cursor-not-allowed" : "")}
-                                      onClick={() => {
-                                          setUrlInputShow(true)
-                                      }}>
-                            <IconWriting size={20}/>
+                            className={"p-2 bg-[#ececec] dark:bg-[#343541] rounded-lg" + (maxImg === 0 ? " cursor-not-allowed" : "")}
+                            onClick={() => {
+                                setUrlInputShow(true)
+                            }}>
+                            <IconWriting size={20} />
                         </button>}
                         <div className={"ml-4 " + (maxImg === 0 ? "hidden" : "block")}>
                             For Llava series models, please submit an image URL or upload an image.
@@ -394,7 +393,7 @@ export const ChatInput = ({
                         className="absolute left-2 top-2 rounded-sm p-1 text-neutral-800 opacity-60 dark:bg-opacity-50 dark:text-neutral-100"
                     >
                         {/*{plugin ? <IconBrandGoogle size={20} /> : <IconBolt size={20} />}*/}
-                        <IconBolt size={20}/>
+                        <IconBolt size={20} />
                     </div>
                     {/*</button>*/}
 
@@ -428,11 +427,10 @@ export const ChatInput = ({
                             resize: 'none',
                             bottom: `${textareaRef?.current?.scrollHeight}px`,
                             maxHeight: '400px',
-                            overflow: `${
-                                textareaRef.current && textareaRef.current.scrollHeight > 400
+                            overflow: `${textareaRef.current && textareaRef.current.scrollHeight > 400
                                     ? 'auto'
                                     : 'hidden'
-                            }`,
+                                }`,
                         }}
                         placeholder={
                             t('Type a message or type "/" to select a prompt...') || ''
@@ -454,7 +452,7 @@ export const ChatInput = ({
                             <div
                                 className="h-4 w-4 animate-spin rounded-full border-t-2 border-neutral-800 opacity-60 dark:border-neutral-100"></div>
                         ) : (
-                            <IconSend size={18}/>
+                            <IconSend size={18} />
                         )}
                     </button>
 
@@ -464,7 +462,7 @@ export const ChatInput = ({
                                 className="flex h-7 w-7 items-center justify-center rounded-full bg-neutral-300 text-gray-800 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-neutral-200"
                                 onClick={onScrollDownClick}
                             >
-                                <IconArrowDown size={18}/>
+                                <IconArrowDown size={18} />
                             </button>
                         </div>
                     )}
@@ -494,7 +492,7 @@ export const ChatInput = ({
             <div className="lg:mx-auto lg:max-w-3xl">
                 <div className={"flex mx-2 sm:mx-4" + (imageSrcList.length > 0 ? " mt-4" : "")}>
                     {imageSrcList.map((imageSrc, index) => (
-                        <div key={index} style={{position: 'relative', display: 'inline-block', marginRight: '10px'}}>
+                        <div key={index} style={{ position: 'relative', display: 'inline-block', marginRight: '10px' }}>
                             <div
                                 style={{
                                     width: '100px',
@@ -508,7 +506,7 @@ export const ChatInput = ({
                                 <img
                                     src={imageSrc}
                                     alt="Uploaded"
-                                    style={{width: '100%', height: '100%', objectFit: 'cover'}}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
                                 <div
                                     style={{
@@ -540,15 +538,8 @@ export const ChatInput = ({
             </div>
             <div
                 className="px-3 pt-2 pb-3 text-center text-[12px] text-black/50 dark:text-white/50 md:px-4 md:pt-3 md:pb-6">
-                <span>Based on </span>
-                <a
-                    href="https://github.com/second-state/chatbot-ui"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline"
-                >
-                    chatbot-ui
-                </a>
+                <span>Salvador JP personal chatbot</span>
+
             </div>
         </div>
     );
